@@ -1,0 +1,6 @@
+requests
+beautifulsoup4
+selenium
+sqlalchemy
+psycopg2-binary
+python-decouple
