@@ -8,4 +8,4 @@
 5. Создайте .env помемтите туда переменные где USERNAME=имя пользователя postgres, PASSWORD=пароль пользователя, HOST=host, DB_NAME=имя базы данных
  
 # parser-selenium
-
+Если хотите видеть какую страницу парсит скрипт замените в функции main: **get_source_html** на **get_source_html_selenium**
