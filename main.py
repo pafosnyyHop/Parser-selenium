@@ -14,6 +14,7 @@ engine = create_engine(f"postgresql+psycopg2://{config('USERNAME')}:{config('PAS
 base = declarative_base()
 session = sessionmaker(bind=engine)()
 
+
 class Apartament(base):
     __tablename__= 'apartaments'
     id = Column(Integer, primary_key=True)
@@ -24,6 +25,7 @@ class Apartament(base):
 
     def __repr__(self) -> str:
         return f'{self.price}'
+
 
 def get_source_html(url):
     """Парсер c requests"""
@@ -108,10 +110,6 @@ def get_cards(file_path) -> bool:
         return False
 
     
-
-
-    
-
 def main():
     base.metadata.create_all(engine)
     i = 1
@@ -124,6 +122,7 @@ def main():
             break
         print(f'Страница: {i}')
         i += 1
+
 
 if __name__ == '__main__':
     main()
