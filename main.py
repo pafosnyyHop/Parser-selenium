@@ -121,7 +121,7 @@ def main():
         is_res = get_cards(file_path='source-page.html')
         if not is_res:
             break
-        print(f'Страница: {i}')
+        print(f'\nСтраница: {i}')
         i += 1
 
 
