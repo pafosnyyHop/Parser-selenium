@@ -115,7 +115,7 @@ def main():
     i = 1
 
     while True:
-        url = f'https://www.kijiji.ca/b-apartments-condos/city-of-toronto/page-1/c37l1700273?ad=offering'
+        url = f'https://www.kijiji.ca/b-apartments-condos/city-of-toronto/page-{i}/c37l1700273?ad=offering'
         get_source_html(url)
         is_res = get_cards(file_path='source-page.html')
         if not is_res:
