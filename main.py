@@ -74,12 +74,14 @@ def get_cards(file_path) -> bool:
         next = soup.find('div', class_='bottom-bar').find('div', class_='pagination').find('a', title='Next')
 
         for card in cards:
+
+            bad_price = card.find('div', class_='price').text.strip()
+            bad_date = card.find('div', class_='location').find('span', class_='date-posted').text
+
             try:
                 image = card.find('div', class_='image').find('img').get('data-src')
             except:
                 image = 'NO IMAGE! :p'
-
-            bad_price = card.find('div', class_='price').text.strip()
 
             if bad_price.find('$'):
                 price = 'None'
@@ -88,7 +90,6 @@ def get_cards(file_path) -> bool:
                 currency = bad_price[0]
                 price = bad_price.replace('$', '')
 
-            bad_date = card.find('div', class_='location').find('span', class_='date-posted').text
             if bad_date.find('ago') != -1:
                 date = f'{datetime.now().day}/{datetime.now().month}/{datetime.now().year}'
             else:
