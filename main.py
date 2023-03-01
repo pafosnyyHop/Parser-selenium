@@ -63,61 +63,67 @@ def get_cards(file_path) -> bool:
     """
     функция парсер, получает все данные с сайта
     """
-    with open('source-page.html') as file:
+    with open(file_path) as file:
         html = file.read()
     soup = BeautifulSoup(html, 'html.parser')
     items_divs = soup.find_all('div', class_='container-results')
     cards = items_divs[-1].find_all('div', {'class': 'clearfix'})
+    try:
+        next = soup.find('div', class_='bottom-bar').find('div', class_='pagination').find('a', title='Next')
 
-    if not items_divs:
-        return False
+        for card in cards:
+            try:
+                image = card.find('div', class_='image').find('img').get('data-src')
+            except:
+                image = 'NO IMAGE! :p'
 
-    for card in cards:
-        try:
-            image = card.find('div', class_='image').find('img').get('data-src')
-        except:
-            image = 'NO IMAGE! :p'
+            bad_price = card.find('div', class_='price').text.strip()
 
-        bad_price = card.find('div', class_='price').text.strip()
+            if bad_price.find('$'):
+                price = 'None'
+                currency = 'None'
+            else:
+                currency = bad_price[0]
+                price = bad_price.replace('$', '')
 
-        if bad_price.find('$'):
-            price = 'None'
-            currency = 'None'
-        else:
-            currency = bad_price[0]
-            price = bad_price.replace('$', '')
+            bad_date = card.find('div', class_='location').find('span', class_='date-posted').text
+            if bad_date.find('ago') != -1:
+                date = f'{datetime.now().day}/{datetime.now().month}/{datetime.now().year}'
+            else:
+                date = bad_date
 
-        bad_date = card.find('div', class_='location').find('span', class_='date-posted').text
-        if bad_date.find('ago') != -1:
-            date = f'{datetime.now().day}/{datetime.now().month}/{datetime.now().year}'
-        else:
-            date = bad_date
-         
-
-        data = {
+            data = {
             'image': image,
             'price': price,
             'currency': currency,
             'date': date
-        }
-        print(data)
-        session.add_all([Apartament(image=image, price=price, currency=currency, date=date)])
-        session.commit()
-    
+            }
+            # print(data)
+            session.add_all([Apartament(image=image, price=price, currency=currency, date=date)])
+            session.commit()
 
- 
-    return True
+        return True
+
+    except Exception:
+        return False
+
+    
 
 
     
 
 def main():
     base.metadata.create_all(engine)
+    i = 1
 
-    for i in range(1, 101):
-        url = f'https://www.kijiji.ca/b-apartments-condos/city-of-toronto/page-{i}/c37l1700273?ad=offering'
+    while True:
+        url = f'https://www.kijiji.ca/b-apartments-condos/city-of-toronto/page-1/c37l1700273?ad=offering'
         get_source_html(url)
+        is_res = get_cards(file_path='source-page.html')
+        if not is_res:
+            break
         print(f'Страница: {i}')
+        i += 1
 
 if __name__ == '__main__':
     main()
